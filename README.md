@@ -2,6 +2,11 @@
 
 School project
 
+It should be able to do CRUD operations on all tables, and maintain constraints fx. for ID.  
+Only IDs of other tables should be represented in other tables, if at all.  
+We may alter the database structure.  
+We could programatically create indexes for all tables, but it may not make sense for all of them, it depends on how often we expect to read versus write to it, as writing means recreating the index.
+
 ## Project structure
 
 Suggested structure for the database files, so we don't have to have them on GitHub and so our path and name of them is consistent for programming purposes?  
