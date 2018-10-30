@@ -1,2 +1,8 @@
 .class
+
+# Don't manage the DB on GitHub
 database
+
+# Ignore VP backup and lck files
+*.bak*
+*.lck
