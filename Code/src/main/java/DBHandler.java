@@ -46,18 +46,27 @@ public class DBHandler
         
     }
 
-    public String[] read(int databaseID, int dataID) throws FileNotFoundException
+    public String[] read(int databaseID, int dataID)
     {
-        Scanner scanner = new Scanner(dbFiles.get(databaseID), "UTF-8");
+        String[] data = null; 
         
-        for (int i = 0; i < dataID; i++) 
+        try 
         {
-            scanner.nextLine();
-        }
+            Scanner scanner = new Scanner(dbFiles.get(databaseID), "UTF-8");
 
-        String[] data = scanner.nextLine().split("\t");
+            for (int i = 0; i < dataID; i++) 
+            {
+                scanner.nextLine();
+            }
+
+            data = scanner.nextLine().split("\t");
         
-        scanner.close();
+            scanner.close();
+        } 
+        catch (Exception e) 
+        {
+            System.out.println(e.getMessage());
+        }
         
         return data;
     }
@@ -73,7 +82,7 @@ public class DBHandler
         
     }
     
-    public String[] getColumnTitles(int databaseID) throws FileNotFoundException
+    public String[] getColumnTitles(int databaseID)
     {
         return read(databaseID, 0);
     }

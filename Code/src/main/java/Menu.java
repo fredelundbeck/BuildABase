@@ -18,13 +18,13 @@ public class Menu
         handler = new DBHandler(dbPathFinder.getPaths());
     }
 
-    public void start() throws FileNotFoundException
+    public void start()
     {
         running = true;
         loop();
     }
 
-    private void loop() throws FileNotFoundException
+    private void loop()
     {
         while (running) 
         {
@@ -53,7 +53,7 @@ public class Menu
         "Operation to run: ");
     }
 
-    private void runOPCode(byte opCode) throws FileNotFoundException
+    private void runOPCode(byte opCode)
     {
         switch (opCode) {
 
