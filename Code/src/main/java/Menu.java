@@ -1,4 +1,5 @@
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -12,7 +13,7 @@ public class Menu
     public Menu() 
     {
         scanner = new Scanner(System.in);
-        handler = new DBHandler();
+        handler = new DBHandler(getDatabasePaths());
     }
 
     public void start() throws FileNotFoundException
@@ -30,9 +31,57 @@ public class Menu
             byte opCode = (byte)getNumericalValueFromInput();
             
             runOPCode(opCode);
+
+            pressEnterToContinue();
+
         }
 
         System.out.println("goodbye!");
+    }
+
+    private ArrayList<String> getDatabasePaths()
+    {
+        System.out.println("Please navigate to your database folder (.../databases)");
+        
+        ArrayList<String> paths = new ArrayList<String>();
+        String path;
+
+        File folder;
+        File[] files;
+        
+        while (true) 
+        {
+            path = scanner.nextLine();
+            folder = new File(path);
+            
+            if (folder.exists() && folder.isDirectory()) 
+            {
+                files = folder.listFiles();
+
+                if (files.length > 0) 
+                {
+                    for (int i = 0; i < files.length; i++) 
+                    {
+                        if (files[i].getName().endsWith(".tsv")) 
+                        {
+                             paths.add(files[i].getAbsolutePath());
+                        }
+                    }
+
+                    return paths;
+                }
+            } 
+            else
+            {
+                System.out.println("The directory doesn't contain any .tsv files! \n" + 
+                "Want to try again? (y/n)");
+
+                if (scanner.nextLine().equals("n")) 
+                {
+                    System.exit(0);       
+                }
+            }
+        }
     }
 
     
@@ -53,27 +102,31 @@ public class Menu
     {
         switch (opCode) {
             case 1:
+
                 break;
+
             case 2:
+
                 System.out.println("Which database would you like to read from?");
                 
                 byte databaseID = (byte)getNumericalValueFromInput();
                 
                 System.out.println("Which data id would you like to read?");
+
                 int dataID = getNumericalValueFromInput();
 
 
                 String[] arr = handler.getColumnTitles(0);
-                String[] data = handler.read(0, 1000);
+                String[] data = handler.read(0, dataID);
 
                 for (int i = 0; i < arr.length; i++) 
                 {
                     System.out.println(arr[i] + ": " + data[i]);
                 }
-                
 
-                scanner.next();
+                
                 break;
+
             case 5:
                 running = false;
                 break;
@@ -93,8 +146,8 @@ public class Menu
 
                if (isNumberVal(input)) 
                {
-                   value = Integer.parseInt(input);
-                   break;
+                    value = Integer.parseInt(input);
+                    break;
                }
                else
                {
@@ -116,6 +169,19 @@ public class Menu
             }
         }
         return true;
+    }
+
+    private void pressEnterToContinue()
+    {
+        System.out.println("\nPress enter to continue..");
+        try 
+        {
+            System.in.read();
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
     }
 
     

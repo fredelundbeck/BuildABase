@@ -1,25 +1,37 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DBHandler 
 {
     private int id;
     private String file;
+    private ArrayList<String> dbPaths;
 
-    public DBHandler() 
+    public DBHandler()
+    {
+
+    }
+
+    public DBHandler(ArrayList<String> dbPaths) 
+    {
+        this.dbPaths = dbPaths;
+    }
+
+    public void setDBPaths(ArrayList<String> dbPaths)
+    {
+        this.dbPaths = dbPaths;
+    }
+    
+    public void create(int databaseID, String[] data)
     {
         
     }
-    
-    public void create()
-    {
 
-    }
-
-    public String[] read(int i2, int dataID) throws FileNotFoundException
+    public String[] read(int databaseID, int dataID) throws FileNotFoundException
     {
-        String path = "C:/Users/Bruger/Documents/Programming/BuildABase/TheProject/databases/name.basics.tsv";
+        String path = dbPaths.get(databaseID);
         File file = new File(path);
         Scanner scanner = new Scanner(file, "UTF-8");
         
@@ -28,22 +40,26 @@ public class DBHandler
             scanner.nextLine();
         }
 
-        return scanner.nextLine().split("\t");
+        String[] data = scanner.nextLine().split("\t");
+        
+        scanner.close();
+        
+        return data;
     }
 
-    public String[] getColumnTitles(int i) throws FileNotFoundException
+    
+    public void update(int databaseID, int dataID)
     {
-        return read(i, 0);
+        
     }
-
-    public void update()
+    
+    public void delete(int databaseID, int dataID)
     {
-
+        
     }
-
-    public void delete()
+    
+    public String[] getColumnTitles(int databaseID) throws FileNotFoundException
     {
-
+        return read(databaseID, 0);
     }
-
 }
