@@ -7,13 +7,15 @@ public class Menu
 {
     private Scanner scanner;
     private DBHandler handler;
+    private DBPathFinder dbPathFinder;
 
     private boolean running = false;
 
     public Menu() 
     {
+        dbPathFinder = new DBPathFinder();
         scanner = new Scanner(System.in);
-        handler = new DBHandler(getDatabasePaths());
+        handler = new DBHandler(dbPathFinder.getPaths());
     }
 
     public void start() throws FileNotFoundException
@@ -28,106 +30,75 @@ public class Menu
         {
             promptMenu();
             
-            byte opCode = (byte)getNumericalValueFromInput();
+            byte opCode = (byte)InputHandler.getNumericalInputRange(1,5);
             
             runOPCode(opCode);
 
-            pressEnterToContinue();
-
-        }
-
-        System.out.println("goodbye!");
-    }
-
-    private ArrayList<String> getDatabasePaths()
-    {
-        System.out.println("Please navigate to your database folder (.../databases)");
-        
-        ArrayList<String> paths = new ArrayList<String>();
-        String path;
-
-        File folder;
-        File[] files;
-        
-        while (true) 
-        {
-            path = scanner.nextLine();
-            folder = new File(path);
-            
-            if (folder.exists() && folder.isDirectory()) 
+            if (running) 
             {
-                files = folder.listFiles();
-
-                if (files.length > 0) 
-                {
-                    for (int i = 0; i < files.length; i++) 
-                    {
-                        if (files[i].getName().endsWith(".tsv")) 
-                        {
-                             paths.add(files[i].getAbsolutePath());
-                        }
-                    }
-
-                    return paths;
-                }
-            } 
-            else
-            {
-                System.out.println("The directory doesn't contain any .tsv files! \n" + 
-                "Want to try again? (y/n)");
-
-                if (scanner.nextLine().equals("n")) 
-                {
-                    System.exit(0);       
-                }
+                pressEnterToContinue();
             }
         }
+        scanner.close();
     }
-
-    
 
     private void promptMenu()
     {
-        System.out.println("What would you like to do? \n" +
+        System.out.println("\nChoose option! \n" +
         "1. Create new data \n" + 
         "2. Read from data \n" + 
         "3. Update existing data \n" +
         "4. Delete data \n" +
         "5. Exit program \n\n" +
-        "Please input which operation you would like to run: ");
-
+        "Operation to run: ");
     }
 
     private void runOPCode(byte opCode) throws FileNotFoundException
     {
         switch (opCode) {
+
+            //CREATE
             case 1:
 
                 break;
 
+            //READ
             case 2:
 
                 System.out.println("Which database would you like to read from?");
+
+                displayAvailableDatabases();
                 
-                byte databaseID = (byte)getNumericalValueFromInput();
+                byte databaseID = (byte)(InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
                 
-                System.out.println("Which data id would you like to read?");
+                System.out.println("\nWhich data id would you like to read?");
 
-                int dataID = getNumericalValueFromInput();
+                //TODO: change to range input 
+                int dataID = InputHandler.getNumericalInput();
 
+                String[] columns = handler.getColumnTitles(0);
+                String[] data = handler.read(databaseID, dataID);
 
-                String[] arr = handler.getColumnTitles(0);
-                String[] data = handler.read(0, dataID);
-
-                for (int i = 0; i < arr.length; i++) 
+                for (int i = 0; i < columns.length; i++) 
                 {
-                    System.out.println(arr[i] + ": " + data[i]);
+                    System.out.println("[" + columns[i] + "]" + ": " + data[i]);
                 }
+  
+                break;
 
+            //UPDATE
+            case 3:
                 
                 break;
 
+            //DELETE
+            case 4:
+
+                break;
+
+            //EXIT
             case 5:
+
                 running = false;
                 break;
         
@@ -135,54 +106,22 @@ public class Menu
                 break;
         }
     }
-
-    private int getNumericalValueFromInput()
-    {
-        int value = 0;
-        
-        while (true) 
-            {
-               String input = scanner.next();
-
-               if (isNumberVal(input)) 
-               {
-                    value = Integer.parseInt(input);
-                    break;
-               }
-               else
-               {
-                    System.out.println("You need to input a numerical value!\n");
-               }
-                
-            }
-
-            return value;
-    }
     
-    private boolean isNumberVal(String input)
+    private void displayAvailableDatabases()
     {
-        for (int i = 0; i < input.length(); i++) 
+        ArrayList<String> fileNames = handler.getDBNames();
+
+        for (int i = 0; i < fileNames.size(); i++) 
         {
-            if (!Character.isDigit(input.charAt(i))) 
-            {
-                return false;
-            }
+            System.out.println(i+1 + ". " + fileNames.get(i));
         }
-        return true;
     }
+ 
 
     private void pressEnterToContinue()
     {
         System.out.println("\nPress enter to continue..");
-        try 
-        {
-            System.in.read();
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
+        
+        InputHandler.getInput();
     }
-
-    
 }
