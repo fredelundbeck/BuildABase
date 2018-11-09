@@ -13,7 +13,7 @@ class InputHandler
     public static int getNumericalInput()
     {
         int value = 0;
-        
+
         while (true) 
             {
                String input = getInput();

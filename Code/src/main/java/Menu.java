@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -76,10 +75,10 @@ public class Menu
                 //TODO: change to range input 
                 int dataID = InputHandler.getNumericalInput();
 
-                String[] columns = handler.getColumnTitles(0);
+                String[] columns = handler.getColumnTitles(databaseID);
                 String[] data = handler.read(databaseID, dataID);
 
-                for (int i = 0; i < columns.length; i++) 
+                for (int i = 0; i < columns.length-1; i++) 
                 {
                     System.out.println("[" + columns[i] + "]" + ": " + data[i]);
                 }

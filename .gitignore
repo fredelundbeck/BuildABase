@@ -1,6 +1,6 @@
 *.class
 
-# Database files
+# Ignore database files
 *.tsv
 
 # Ignore VP backup and lck files
