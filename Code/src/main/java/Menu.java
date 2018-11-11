@@ -54,35 +54,78 @@ public class Menu
 
     private void runOPCode(byte opCode)
     {
+        int databaseID;
+        int dataID;
+
         switch (opCode) {
+
 
             //CREATE
             case 1:
-
+                handler.create(0, new String[]{"hello", "frederik"});
                 break;
 
             //READ
             case 2:
 
-                System.out.println("Which database would you like to read from?");
+                System.out.println("\nEnter database id, you want to read from: ");
 
                 displayAvailableDatabases();
                 
-                byte databaseID = (byte)(InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
-                
-                System.out.println("\nWhich data id would you like to read?");
+                databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
 
-                //TODO: change to range input 
-                int dataID = InputHandler.getNumericalInput();
+                System.out.println("\nEnter option number: ");
+                System.out.println("1. Read from ID input\n" + 
+                "2. Read from string search input");
+
+                byte readChoice = (byte)(InputHandler.getNumericalInputRange(1, 2));
 
                 String[] columns = handler.getColumnTitles(databaseID);
-                String[] data = handler.read(databaseID, dataID);
+                ArrayList<String[]> data = new ArrayList<String[]>();
 
-                for (int i = 0; i < columns.length-1; i++) 
+
+                if (readChoice == 1) 
                 {
-                    System.out.println("[" + columns[i] + "]" + ": " + data[i]);
+                    System.out.println("\nEnter the data ID you would like to read: ");
+
+                    dataID = InputHandler.getNumericalInput();
+ 
+                    data.add(handler.read(databaseID, dataID));
+                } 
+                else
+                {
+                    System.out.println("\nEnter the search string you would like to search with: ");
+
+                    String search = InputHandler.getInput();
+
+                    data = handler.search((int)databaseID, search);
                 }
-  
+                
+                
+
+                if (data.size() > 0 && data.get(0) != null) 
+                {
+                    for (String[] arrData : data) 
+                    {
+                        for (int i = 0; i < columns.length; i++) 
+                        {
+                            System.out.println("[" + columns[i] + "]" + ": " + arrData[i]);
+                        }
+
+                        System.out.println();
+                    }
+                    
+                    if (readChoice == 2) 
+                    {
+                        String matchMsg = data.size() > 1 ? " matches" : " match";
+                        System.out.println(data.size() + matchMsg + " was found!");
+                    }
+                } 
+                else
+                {
+                    System.out.println("No matches found!");
+                }
+
                 break;
 
             //UPDATE
@@ -92,6 +135,16 @@ public class Menu
 
             //DELETE
             case 4:
+
+            
+                System.out.println("\nEnter database id to delete from: ");
+                displayAvailableDatabases();
+                databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
+
+                System.out.println("Enter data id to delete: ");
+                dataID = InputHandler.getNumericalInput();
+
+                handler.delete(databaseID, dataID);    
 
                 break;
 

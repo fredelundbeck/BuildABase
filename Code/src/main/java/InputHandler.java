@@ -18,14 +18,14 @@ class InputHandler
             {
                String input = getInput();
 
-               if (isNumericalValue(input)) 
+               if (input.length() > 0 && isNumericalValue(input)) 
                {
                     value = Integer.parseInt(input);
                     break;
                }
                else
                {
-                    System.out.println("You need to input a numerical value!\n");
+                    System.out.println("You need to input a numerical value!");
                }
                 
             }

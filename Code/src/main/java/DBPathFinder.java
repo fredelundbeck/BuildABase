@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import UserSettings.UserInformation;
+
 public class DBPathFinder 
 {
     Scanner scanner;
@@ -70,7 +72,7 @@ public class DBPathFinder
                     if (reader.hasNextLine()) 
                     {
                         path = reader.nextLine(); 
-                        System.out.println("dbsFolderPath.txt contained a path! Adding database path(s)...");   
+                        System.out.println("dbsFolderPath.txt contained a path! Adding database path(s)...");  
                     } 
                     else
                     {
@@ -125,7 +127,8 @@ public class DBPathFinder
                     {
                         System.out.println(e.getMessage());
                     }
-
+                    
+                    UserInformation.SetDatabasePath(path);
                     System.out.println();
                     return files;
                 } 
