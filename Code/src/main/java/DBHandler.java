@@ -1,16 +1,11 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 
-import UserSettings.UserInformation;
+import java.util.ArrayList;
 
 public class DBHandler 
 {
@@ -51,28 +46,18 @@ public class DBHandler
     {
         try 
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dbFiles.get(databaseID)), "UTF-8"));
+            FileWriter fw = new FileWriter(dbFiles.get(databaseID), true);
 
-            String newLine;
+            //Set new ID 
+            data[0] = getNextAvailableID(databaseID);
 
-            while ((newLine = br.readLine()) != null) 
-            {
-
-            }
-
-            br.close();
-
-
-            String joinedData = "hello";
-
-            FileWriter writer = new FileWriter(dbFiles.get(databaseID));
-            writer.append(joinedData, 0, (joinedData).length());
-            
-            writer.close();
+            fw.write("\n");
+            fw.write(String.join("\t", data));
+            fw.close();
         } 
         catch (IOException e) 
         {
-           
+           System.out.println(e.getMessage());
         }
     }
 
@@ -103,7 +88,6 @@ public class DBHandler
                     
                     try 
                     {
-                        //TODO: find a better (softcoded) solution to detecting ID matches, instead of being dependent on two letters in ID String fx. (tt0000001) 
                         if ((id = Integer.parseInt(line.substring(0, line.indexOf("\t")).substring(2))) == dataID) 
                         {
                             break;
@@ -141,36 +125,6 @@ public class DBHandler
     
     public void delete(int databaseID, int dataID)
     {
-        //TODO: Finish method
-        try 
-        {
-            File inputFile = dbFiles.get(databaseID);
-            File tempFile = new File(UserInformation.GetDatabasePath() + "\\temp.tsv");
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
-            
-            String newLine = reader.readLine();
-            writer.write(newLine + System.getProperty("line.separator"));
-
-            while ((newLine = reader.readLine()) != null) 
-            {
-                if (Integer.parseInt(newLine.substring(0, newLine.indexOf("\t")).substring(2)) == dataID) 
-                {
-                    continue;
-                }
-                writer.write(newLine + System.getProperty("line.separator"));
-            }
-
-            writer.flush();
-            writer.close();
-            
-            Files.move(tempFile.toPath(), inputFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);         
-        } 
-        catch (IOException e) 
-        {
-            
-        }
 
     }
 
@@ -202,7 +156,6 @@ public class DBHandler
             br.close();
 
             return data;
-
         } 
         catch (IOException e) 
         {
@@ -211,27 +164,39 @@ public class DBHandler
         
         return data;
     }
-
-    private byte[] randomAccessFileRead(File file, long pos, int size)
-    {
-        try 
-        {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-            randomAccessFile.seek(pos);
-            byte[] bytes = new byte[size];
-            randomAccessFile.read(bytes);
-            randomAccessFile.close();
-            return bytes;
-        } 
-        catch (Exception e) 
-        {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
     
     public String[] getColumnTitles(int databaseID)
     {
         return read(databaseID, 0);
+    }
+
+    private String getNextAvailableID(int databaseID) {
+        
+        String lastLine = "";
+
+        try 
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dbFiles.get(databaseID)), "UTF-8"));
+
+            String currentLine = br.readLine();
+
+            while ((currentLine = br.readLine()) != null) 
+            {
+                lastLine = currentLine;
+            }
+
+            String idPrefix = lastLine.substring(0, 2);
+            int idNumberValue = Integer.parseInt(lastLine.substring(2, lastLine.indexOf("\t"))) + 1;   
+
+            br.close();
+            
+            return idPrefix + String.valueOf(idNumberValue);
+        } 
+        catch (IOException e) 
+        {
+            
+        }
+
+        return null;
     }
 }

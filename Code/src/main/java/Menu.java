@@ -43,7 +43,7 @@ public class Menu
 
     private void promptMenu()
     {
-        System.out.println("\nChoose option! \n" +
+        System.out.println("\nDB MENU \n" +
         "1. Create new data \n" + 
         "2. Read from data \n" + 
         "3. Update existing data \n" +
@@ -56,13 +56,30 @@ public class Menu
     {
         int databaseID;
         int dataID;
+        String[] columns;
 
         switch (opCode) {
 
 
             //CREATE
             case 1:
-                handler.create(0, new String[]{"hello", "frederik"});
+
+                System.out.println("Enter database id: ");
+
+                displayAvailableDatabases();
+
+                databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
+
+                columns = handler.getColumnTitles(databaseID);
+                String[] newData = new String[columns.length];
+
+                for (int i = 1; i < columns.length; i++) 
+                {
+                    System.out.println("Enter data for " + columns[i] + ": ");
+                    newData[i] = InputHandler.getInput();
+                }
+
+                handler.create(databaseID, newData);
                 break;
 
             //READ
@@ -80,7 +97,7 @@ public class Menu
 
                 byte readChoice = (byte)(InputHandler.getNumericalInputRange(1, 2));
 
-                String[] columns = handler.getColumnTitles(databaseID);
+                columns = handler.getColumnTitles(databaseID);
                 ArrayList<String[]> data = new ArrayList<String[]>();
 
 
@@ -99,32 +116,9 @@ public class Menu
                     String search = InputHandler.getInput();
 
                     data = handler.search((int)databaseID, search);
-                }
+                }          
                 
-                
-
-                if (data.size() > 0 && data.get(0) != null) 
-                {
-                    for (String[] arrData : data) 
-                    {
-                        for (int i = 0; i < columns.length; i++) 
-                        {
-                            System.out.println("[" + columns[i] + "]" + ": " + arrData[i]);
-                        }
-
-                        System.out.println();
-                    }
-                    
-                    if (readChoice == 2) 
-                    {
-                        String matchMsg = data.size() > 1 ? " matches" : " match";
-                        System.out.println(data.size() + matchMsg + " was found!");
-                    }
-                } 
-                else
-                {
-                    System.out.println("No matches found!");
-                }
+                displayData(data, columns);
 
                 break;
 
@@ -136,7 +130,6 @@ public class Menu
             //DELETE
             case 4:
 
-            
                 System.out.println("\nEnter database id to delete from: ");
                 displayAvailableDatabases();
                 databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
@@ -156,6 +149,42 @@ public class Menu
         
             default:
                 break;
+        }
+    }
+
+    private void displayData(ArrayList<String[]> data, String[] columns)
+    {
+        if (data.size() > 0 && data.get(0) != null) 
+        {         
+            for (String column : columns) 
+            {
+                System.out.print(column + "\t");    
+            }
+    
+            System.out.println();
+    
+            for (int i = 0; i < String.join("", columns).length(); i++) 
+            {
+                System.out.print("-");    
+            }
+    
+            System.out.println();
+    
+            for (String[] arr : data) 
+            {
+                for (int i = 0; i < arr.length; i++) 
+                {
+                    System.out.print(arr[i] + "\t");    
+                } 
+                System.out.println();   
+            }
+
+            String matchMsg = data.size() > 1 ? " matches" : " match";
+            System.out.println(data.size() + matchMsg + " was found!");
+        } 
+        else
+        {
+            System.out.println("No matches found!");
         }
     }
     
