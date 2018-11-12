@@ -2,6 +2,14 @@
 
 # Ignore database files
 *.tsv
+Database
+!Database/test-db
+
+# Ignore some VS Code meta files
+Code/.classpath
+Code/.project
+Code/.settings
+Code/pom.xml    
 
 # Ignore VP backup and lck files
 *.bak*
