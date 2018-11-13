@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import static Utilities.ConsoleUtilityMethods.*;
 
 public class Menu 
 {
@@ -29,13 +29,14 @@ public class Menu
         {
             promptMenu();
             
-            byte opCode = (byte)InputHandler.getNumericalInputRange(1,5);
+            byte opCode = (byte)InputHandler.getNumericalInputRange(1,6);
             
             runOPCode(opCode);
 
             if (running) 
             {
                 pressEnterToContinue();
+                clearScreen();
             }
         }
         scanner.close();
@@ -43,12 +44,17 @@ public class Menu
 
     private void promptMenu()
     {
-        System.out.println("\nDB MENU \n" +
+        System.out.println(
+        "\nCRUD Operations\n" +
+        "-------------------\n" +
         "1. Create new data \n" + 
         "2. Read from data \n" + 
-        "3. Update existing data \n" +
+        "3. Update data \n" +
         "4. Delete data \n" +
-        "5. Exit program \n\n" +
+        "-------------------\n" +
+        "5. Search for data\n" +
+        "-------------------\n" +
+        "6. Exit program \n\n" +
         "Operation to run: ");
     }
 
@@ -57,6 +63,7 @@ public class Menu
         int databaseID;
         int dataID;
         String[] columns;
+        ArrayList<String[]> data;
 
         switch (opCode) {
 
@@ -91,32 +98,15 @@ public class Menu
                 
                 databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
 
-                System.out.println("\nEnter option number: ");
-                System.out.println("1. Read from ID input\n" + 
-                "2. Read from string search input");
-
-                byte readChoice = (byte)(InputHandler.getNumericalInputRange(1, 2));
-
                 columns = handler.getColumnTitles(databaseID);
-                ArrayList<String[]> data = new ArrayList<String[]>();
+                
+                System.out.println("\nEnter the data ID you would like to read: ");
 
+                dataID = InputHandler.getNumericalInput();
 
-                if (readChoice == 1) 
-                {
-                    System.out.println("\nEnter the data ID you would like to read: ");
+                data = new ArrayList<String[]>();
 
-                    dataID = InputHandler.getNumericalInput();
- 
-                    data.add(handler.read(databaseID, dataID));
-                } 
-                else
-                {
-                    System.out.println("\nEnter the search string you would like to search with: ");
-
-                    String search = InputHandler.getInput();
-
-                    data = handler.search((int)databaseID, search);
-                }          
+                data.add(handler.read(databaseID, dataID));
                 
                 displayData(data, columns);
 
@@ -141,8 +131,29 @@ public class Menu
 
                 break;
 
-            //EXIT
+            //SEARCH
             case 5:
+
+                System.out.println("\nEnter database id, you want to search through: ");
+
+                displayAvailableDatabases();
+                
+                databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
+
+                columns = handler.getColumnTitles(databaseID);
+
+                System.out.println("\nEnter search string: ");
+
+                String search = InputHandler.getInput();
+
+                data = new ArrayList<String[]>(handler.search((int)databaseID, search));
+
+                displayData(data, columns);
+
+                break;
+
+            //EXIT
+            case 6:
 
                 running = false;
                 break;
@@ -156,19 +167,21 @@ public class Menu
     {
         if (data.size() > 0 && data.get(0) != null) 
         {         
+            newLine();
+
             for (String column : columns) 
             {
                 System.out.print(column + "\t");    
             }
     
-            System.out.println();
+            newLine();
     
-            for (int i = 0; i < String.join("", columns).length(); i++) 
+            for (int i = 0; i < String.join("", columns).length()+25; i++) 
             {
                 System.out.print("-");    
             }
     
-            System.out.println();
+            newLine();
     
             for (String[] arr : data) 
             {
@@ -176,15 +189,15 @@ public class Menu
                 {
                     System.out.print(arr[i] + "\t");    
                 } 
-                System.out.println();   
+                newLine();   
             }
 
             String matchMsg = data.size() > 1 ? " matches" : " match";
-            System.out.println(data.size() + matchMsg + " was found!");
+            System.out.println("\n" + data.size() + matchMsg + " was found!");
         } 
         else
         {
-            System.out.println("No matches found!");
+            System.out.println("\nNo matches found!");
         }
     }
     

@@ -23,11 +23,14 @@ public class UserInformation
         return OPERATING_SYSTEM;
     }
 
-    public static void SetOSType(OSType type)
+    public static void findAndSetOSTYPE()
     {
         if (OPERATING_SYSTEM == null) 
         {
-            OPERATING_SYSTEM = type;
+            if (System.getProperty("os.name").contains("Windows")) 
+            {
+                OPERATING_SYSTEM = OSType.WINDOWS;
+            }
         }
     }
 }

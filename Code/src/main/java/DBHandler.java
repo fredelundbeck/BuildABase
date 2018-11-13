@@ -108,7 +108,6 @@ public class DBHandler
             br.close();
 
             return line.split("\t");
-        
         } 
         catch (IOException e) 
         {
