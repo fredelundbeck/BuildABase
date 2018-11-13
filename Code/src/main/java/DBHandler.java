@@ -1,22 +1,12 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import UserSettings.UserInformation;
 
 public class DBHandler 
 {
     private ArrayList<File> dbFiles;
-
-    public DBHandler()
-    {
-
-    }
 
     public DBHandler(ArrayList<File> dbFiles) 
     {
@@ -48,14 +38,17 @@ public class DBHandler
     {
         try 
         {
-            FileWriter fw = new FileWriter(dbFiles.get(databaseID), true);
+            File file = dbFiles.get(databaseID);
+            RandomAccessFile handler = new RandomAccessFile(file, "rw");
+            Scanner scanner = new Scanner(System.in);
 
-            //Set new ID 
+            long fileSize = file.length();
+            handler.seek(fileSize);
+
             data[0] = getNextAvailableID(databaseID);
 
-            fw.write("\n");
-            fw.write(String.join("\t", data));
-            fw.close();
+            handler.writeBytes(String.join("\t", data) );
+            handler.close();
         } 
         catch (IOException e) 
         {
@@ -224,8 +217,8 @@ public class DBHandler
             int idNumberValue = Integer.parseInt(lastLine.substring(2, lastLine.indexOf("\t"))) + 1;   
 
             br.close();
-            
-            return idPrefix + String.valueOf(idNumberValue);
+
+            return idPrefix + String.format("%07d", idNumberValue);
         } 
         catch (IOException e) 
         {
