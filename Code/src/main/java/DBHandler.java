@@ -130,7 +130,7 @@ public class DBHandler
     public void delete(int databaseID, int dataID)
     {
         File inputFile = dbFiles.get(databaseID);
-        File tempFile = new File(UserInformation.GetDatabasePath() + "\\temp.tsv");
+        File tempFile = new File(UserInformation.getDatabasePath() + "/temp.tsv");
         
         try 
         {

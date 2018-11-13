@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import UserSettings.UserInformation;
+import UserSettings.OSType;
 
 public class DBPathFinder 
 {
@@ -20,8 +21,13 @@ public class DBPathFinder
     public ArrayList<File> getPaths()
     {
         ArrayList<File> files = new ArrayList<File>();
+        Path storeDBFolderPathTxt;
+        if ( UserInformation.getOSType() == OSType.WINDOWS)
+        {
+            storeDBFolderPathTxt = Paths.get("C:/BuildABase_Resources/dbPath");
+        }
+        else storeDBFolderPathTxt = Paths.get("../../../../dbPath");
 
-        Path storeDBFolderPathTxt = Paths.get("C:/BuildABase_Resources/dbPath");
         String path = null;
 
         //If resources folder doesn't exist, create it!
@@ -32,7 +38,7 @@ public class DBPathFinder
             try 
             {
                 Files.createDirectories(storeDBFolderPathTxt);
-                Files.createFile(Paths.get(storeDBFolderPathTxt + "\\dbsFolderPath.txt"));
+                Files.createFile(Paths.get(storeDBFolderPathTxt + "/dbsFolderPath.txt"));
                 System.out.println("Folder successfully created!");
             } 
             catch (IOException e) 
@@ -46,12 +52,12 @@ public class DBPathFinder
             System.out.println("Resources folder was found! Checking if dbsFolderPath.txt exists...");
 
             //Check if dbsFolderPath.txt exists in that folder. If not, create it
-            if (!Files.exists(Paths.get(storeDBFolderPathTxt + "\\dbsFolderPath.txt")))
+            if (!Files.exists(Paths.get(storeDBFolderPathTxt + "/dbsFolderPath.txt")))
             {
                 System.out.println("dbsFolderPath.txt was not found inside resources folder! Trying to create file...");
                 try 
                 {
-                    Files.createFile(Paths.get(storeDBFolderPathTxt + "\\dbsFolderPath.txt")); 
+                    Files.createFile(Paths.get(storeDBFolderPathTxt + "/dbsFolderPath.txt")); 
                     System.out.println("File was successfully created!");
                 } 
                 catch (IOException e) 
@@ -63,7 +69,7 @@ public class DBPathFinder
             else
             {
                 System.out.println("dbsFolderPath.txt was found! Checking if file contains path...");
-                File dbPathTxtFile = new File(storeDBFolderPathTxt + "\\dbsFolderPath.txt");
+                File dbPathTxtFile = new File(storeDBFolderPathTxt + "/dbsFolderPath.txt");
 
                 try 
                 {
@@ -121,14 +127,14 @@ public class DBPathFinder
 
                     try 
                     {    
-                        Files.write(Paths.get(storeDBFolderPathTxt + "\\dbsFolderPath.txt"), path.getBytes("UTF-8"));
+                        Files.write(Paths.get(storeDBFolderPathTxt + "/dbsFolderPath.txt"), path.getBytes("UTF-8"));
                     } 
                     catch (IOException e) 
                     {
                         System.out.println(e.getMessage());
                     }
                     
-                    UserInformation.SetDatabasePath(path);
+                    UserInformation.setDatabasePath(path);
                     System.out.println();
                     return files;
                 } 

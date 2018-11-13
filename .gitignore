@@ -4,6 +4,7 @@
 *.tsv
 Database
 !Database/test-db
+dbPath
 
 # Ignore some VS Code meta files
 Code/.classpath

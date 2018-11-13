@@ -3,5 +3,6 @@ package UserSettings;
 public enum OSType
 {
     MAC,
-    WINDOWS
+    WINDOWS,
+    LINUX
 }

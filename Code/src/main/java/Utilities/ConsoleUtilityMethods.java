@@ -14,17 +14,20 @@ public class ConsoleUtilityMethods
 
     public static void clearScreen()
     {
-        try 
+        if (UserInformation.getOSType() == OSType.WINDOWS)
         {
-            if (UserInformation.GetOSType() == OSType.WINDOWS)
-            {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else 
-            {
-                Runtime.getRuntime().exec("clear");
-            }
-        } 
-        catch (IOException | InterruptedException ex) {}
+          try
+          {
+              new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+          }
+          catch (IOException | InterruptedException ex) {}
+        }
+        else
+        {
+            String ansiClear = "\033[H\033[2J";
+            System.out.print(ansiClear);
+            System.out.flush();
+            //Runtime.getRuntime().exec("clear");
+        }
     }
 }
