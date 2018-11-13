@@ -100,6 +100,7 @@ public class DBHandler
                     
                     catch (Exception e) 
                     {
+                        
                     }
                 } 
                 else
@@ -140,8 +141,13 @@ public class DBHandler
 
             while ((newLine = br.readLine()) != null) 
             {
-                
+                if (getDataID(newLine) == dataID) 
+                {
+                    continue;
+                }
+                bw.write(newLine);
             }
+
         } 
         catch (IOException e) 
         {
@@ -193,6 +199,12 @@ public class DBHandler
     public String[] getColumnTitles(int databaseID)
     {
         return read(databaseID, 0);
+    }
+
+    private int getDataID(String data)
+    {
+        //TODO: Make it not crash!!
+        return Integer.parseInt(data.substring(0, data.indexOf("\t")).substring(2));
     }
 
     private String getNextAvailableID(int databaseID) {
