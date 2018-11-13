@@ -24,7 +24,7 @@ public class DBPathFinder
         Path storeDBFolderPathTxt;
         if ( UserInformation.getOSType() == OSType.WINDOWS)
         {
-            storeDBFolderPathTxt = Paths.get("C:/BuildABase_Resources/dbPath");
+            storeDBFolderPathTxt = Paths.get(System.getProperty("user.home")+"\\.buildabase");
         }
         else storeDBFolderPathTxt = Paths.get("../../../../dbPath");
 
