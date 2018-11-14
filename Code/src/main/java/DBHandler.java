@@ -102,7 +102,38 @@ public class DBHandler
 
     public void update(int databaseID, int dataID, String[] newData)
     {
-        
+        File inputFile = dbFiles.get(databaseID);
+        File tempFile = new File(UserInformation.getDatabasePath() + "/temp.tsv");
+      
+        try 
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
+
+            String newLine;
+
+            while ((newLine = br.readLine()) != null) 
+            {
+                if (getDataID(newLine) == dataID) 
+                {
+                    bw.append(String.join("\t", newData) + System.getProperty("line.separator"));
+                } 
+                else 
+                {
+                    bw.append(newLine + System.getProperty("line.separator"));
+                }
+            }
+
+            bw.close();
+            br.close();
+
+            //inputFile.delete();
+            Files.move(Paths.get(tempFile.getAbsolutePath()), Paths.get(inputFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+        } 
+        catch (IOException e) 
+        {
+           System.out.println(e.getMessage());
+        }
     }
     
     public void delete(int databaseID, int dataID)
@@ -167,6 +198,27 @@ public class DBHandler
     public String[] getColumnTitles(int databaseID)
     {
         return read(databaseID, 0);
+    }
+
+    public String getIDPrefix(int databaseID)
+    {
+        String prefix = null;
+        try 
+        {
+            BufferedReader br = new BufferedReader(new FileReader(dbFiles.get(databaseID)));
+
+            //Sets the pointer to next line (line:1), that will have the id prefix
+            br.readLine();
+
+            prefix = br.readLine().substring(0, 2);
+
+            br.close();
+        } 
+        catch (IOException e) 
+        {
+        }
+
+        return prefix;
     }
 
     private int getDataID(String data)

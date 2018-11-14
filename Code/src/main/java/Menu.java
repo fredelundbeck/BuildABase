@@ -115,6 +115,30 @@ public class Menu
             //UPDATE
             case 3:
                 
+                System.out.println("Enter database id, you want to update: ");
+
+                displayAvailableDatabases();
+
+                databaseID = (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);
+
+                System.out.println("\nEnter the data ID you would like to update: ");
+
+                dataID = InputHandler.getNumericalInput();
+
+                columns = handler.getColumnTitles(databaseID);
+
+                String[] updatedData = new String[columns.length];
+                
+                updatedData[0] = handler.getIDPrefix(databaseID) + dataID;
+
+                for (int i = 1; i < columns.length; i++) 
+                {
+                    System.out.println("Enter new " + columns[i] + " value: ");
+                    updatedData[i] = InputHandler.getInput();
+                }
+
+                handler.update(databaseID, dataID, updatedData);
+
                 break;
 
             //DELETE
