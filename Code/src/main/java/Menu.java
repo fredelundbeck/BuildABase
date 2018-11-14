@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import static Utilities.ConsoleUtilityMethods.*;
+import static Utilities.ConsoleUtility.*;
 
 public class Menu 
 {

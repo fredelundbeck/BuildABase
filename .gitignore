@@ -10,7 +10,8 @@ dbPath
 Code/.classpath
 Code/.project
 Code/.settings
-Code/pom.xml    
+Code/pom.xml
+.vscode    
 
 # Ignore VP backup and lck files
 *.bak*

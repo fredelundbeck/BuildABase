@@ -1,8 +1,13 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import UserSettings.UserInformation;
+import Utilities.MathUtility;
 
 public class DBHandler 
 {
@@ -64,52 +69,34 @@ public class DBHandler
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dbFiles.get(databaseID)), "UTF-8"));
             
-            String line = null;
-            int id = 0;
+            String line = br.readLine();
+            int idTick = 0;
 
+            //Only get column names
             if (dataID == 0) 
             {
-                if ((line = br.readLine()) != null)
-                {
-                    br.close();
-                    return line.split("\t");   
-                }
+                br.close();
+                return line.split("\t");   
             }
 
-            while (true) 
-            {
-                if ((line = br.readLine()) != null && id < dataID) 
+            while ((line = br.readLine()) != null && idTick < dataID) 
+            {  
+                if ((Integer.parseInt(line.substring(0, line.indexOf("\t")).substring(2))) == dataID) 
                 {
-                    
-                    try 
-                    {
-                        if ((id = Integer.parseInt(line.substring(0, line.indexOf("\t")).substring(2))) == dataID) 
-                        {
-                            break;
-                        }
-                    }
-                    
-                    catch (Exception e) 
-                    {
-                        
-                    }
+                    data = line.split("\t");
+                    break;
                 } 
                 else
                 {
-                    br.close();
-                    return null;
+                    idTick++;
                 }
             }
-
             br.close();
-
-            return line.split("\t");
         } 
         catch (IOException e) 
         {
             System.out.println(e.getMessage());
         }
-        
         return data;
     }
 
@@ -122,7 +109,7 @@ public class DBHandler
     {
         File inputFile = dbFiles.get(databaseID);
         File tempFile = new File(UserInformation.getDatabasePath() + "/temp.tsv");
-        
+      
         try 
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
@@ -136,18 +123,19 @@ public class DBHandler
                 {
                     continue;
                 }
-                bw.write(newLine);
+                bw.append(newLine + System.getProperty("line.separator"));
             }
 
+            bw.close();
+            br.close();
+
+            //inputFile.delete();
+            Files.move(Paths.get(tempFile.getAbsolutePath()), Paths.get(inputFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
         } 
         catch (IOException e) 
         {
-           
+           System.out.println(e.getMessage());
         }
-
-
-
-
     }
 
     public ArrayList<String[]> search(int databaseID, String searchString)
@@ -157,33 +145,22 @@ public class DBHandler
         try 
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dbFiles.get(databaseID)), "UTF-8"));
-            
-            String line = null;
+            String line = br.readLine();
 
-            while (true) 
+            while ((line = br.readLine()) != null) 
             {
-                if ((line = br.readLine()) != null) 
+                if (line.toLowerCase().contains(searchString.toLowerCase())) 
                 {
-                    if (line.toLowerCase().contains(searchString.toLowerCase())) 
-                    {
-                        data.add(line.split("\t"));
-                    }
-                } 
-                else
-                {
-                    break;
+                    data.add(line.split("\t"));
                 }
             }
-
             br.close();
-
             return data;
         } 
         catch (IOException e) 
         {
             System.out.println(e.getMessage());
         }
-        
         return data;
     }
     
@@ -194,8 +171,12 @@ public class DBHandler
 
     private int getDataID(String data)
     {
-        //TODO: Make it not crash!!
-        return Integer.parseInt(data.substring(0, data.indexOf("\t")).substring(2));
+        //Could also wrap Integer.parse in try/catch, but that's too easy! :-)
+        if (MathUtility.isNumericalValue(data.substring(2, data.indexOf("\t")))) 
+        {
+            return Integer.parseInt(data.substring(2, data.indexOf("\t")));
+        }
+        return -1;
     }
 
     private String getNextAvailableID(int databaseID) {

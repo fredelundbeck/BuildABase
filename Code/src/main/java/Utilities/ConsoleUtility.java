@@ -1,11 +1,10 @@
 package Utilities;
 
 import java.io.IOException;
-
 import UserSettings.OSType;
 import UserSettings.UserInformation;
 
-public class ConsoleUtilityMethods
+public class ConsoleUtility
 {
     public static void newLine()
     {
@@ -20,7 +19,7 @@ public class ConsoleUtilityMethods
           {
               new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
           }
-          catch (IOException | InterruptedException ex) {}
+          catch (IOException | InterruptedException e) {}
         }
         else
         {

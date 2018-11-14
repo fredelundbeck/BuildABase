@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import Utilities.MathUtility;
 
 class InputHandler
 {
@@ -18,7 +19,7 @@ class InputHandler
             {
                String input = getInput();
 
-               if (input.length() > 0 && isNumericalValue(input)) 
+               if (input.length() > 0 && MathUtility.isNumericalValue(input)) 
                {
                     value = Integer.parseInt(input);
                     break;
@@ -50,16 +51,5 @@ class InputHandler
         return value;
     }
 
-    private static boolean isNumericalValue(String input)
-    {
-        for (int i = 0; i < input.length(); i++) 
-        {
-            if (!Character.isDigit(input.charAt(i))) 
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
 }
