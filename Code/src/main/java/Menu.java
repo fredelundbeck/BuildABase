@@ -67,8 +67,11 @@ public class Menu
 
             //CREATE
             case 1:
+
                 databaseID = promptAndGetDatabaseID();
+
                 columns = handler.getColumnTitles(databaseID);
+
                 String[] newData = new String[columns.length];
 
                 for (int i = 1; i < columns.length; i++) 
@@ -82,13 +85,19 @@ public class Menu
 
             //READ
             case 2:
-            
+
                 databaseID = promptAndGetDatabaseID();
+
                 columns = handler.getColumnTitles(databaseID);
+
                 System.out.println("\nEnter the data ID you would like to read: ");
+
                 dataID = InputHandler.getNumericalInput();
+
                 data = new ArrayList<String[]>();
+
                 data.add(handler.read(databaseID, dataID));
+
                 displayData(data, columns);
 
                 break;
@@ -97,10 +106,15 @@ public class Menu
             case 3:
 
                 databaseID = promptAndGetDatabaseID();
+
                 System.out.println("\nEnter the data ID you would like to update: ");
+
                 dataID = InputHandler.getNumericalInput();
+
                 columns = handler.getColumnTitles(databaseID);
+
                 String[] updatedData = new String[columns.length];
+
                 updatedData[0] = handler.getIDPrefix(databaseID) + dataID;
 
                 for (int i = 1; i < columns.length; i++) 
@@ -117,8 +131,11 @@ public class Menu
             case 4:
 
                 databaseID = promptAndGetDatabaseID();
+
                 System.out.println("Enter data id to delete: ");
+
                 dataID = InputHandler.getNumericalInput();
+
                 handler.delete(databaseID, dataID);    
 
                 break;
@@ -127,10 +144,15 @@ public class Menu
             case 5:
 
                 databaseID = promptAndGetDatabaseID();
+
                 columns = handler.getColumnTitles(databaseID);
+
                 System.out.println("\nEnter search string: ");
+
                 String search = InputHandler.getInput();
+
                 data = new ArrayList<String[]>(handler.search((int)databaseID, search));
+
                 displayData(data, columns);
 
                 break;
@@ -204,7 +226,9 @@ public class Menu
     private int promptAndGetDatabaseID()
     {
         System.out.println("Enter database id: ");
+
         displayAvailableDatabases();
+        
         return (InputHandler.getNumericalInputRange(1, handler.getDBCount())-1);    
     }
 }
