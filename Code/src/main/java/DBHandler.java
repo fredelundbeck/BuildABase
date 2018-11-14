@@ -1,10 +1,17 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 import UserSettings.UserInformation;
 import Utilities.MathUtility;
@@ -45,7 +52,6 @@ public class DBHandler
         {
             File file = dbFiles.get(databaseID);
             RandomAccessFile handler = new RandomAccessFile(file, "rw");
-            Scanner scanner = new Scanner(System.in);
 
             long fileSize = file.length();
             handler.seek(fileSize);
