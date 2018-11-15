@@ -18,16 +18,13 @@ import Utilities.MathUtility;
 
 public class DBHandler 
 {
-    private ArrayList<File> dbFiles;
-
-    public DBHandler() {
-      IndexManager idm = new IndexManager();
-      idm(dbFiles);
-    }
+    public ArrayList<File> dbFiles;
 
     public DBHandler(ArrayList<File> dbFiles) 
     {
         this.dbFiles = dbFiles;
+        IndexManager idm = new IndexManager(this);
+        idm.lookup( "tt5028396", dbFiles.get(6) );
     }
 
     public int getDBCount()
@@ -232,7 +229,7 @@ public class DBHandler
         return prefix;
     }
 
-    private int getDataID(String data)
+    public static int getDataID(String data)
     {
         //Could also wrap Integer.parse in try/catch, but that's too easy! :-)
         if (MathUtility.isNumericalValue(data.substring(2, data.indexOf("\t")))) 
