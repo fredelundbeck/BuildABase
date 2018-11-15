@@ -20,6 +20,11 @@ public class DBHandler
 {
     private ArrayList<File> dbFiles;
 
+    public DBHandler() {
+      IndexManager idm = new IndexManager();
+      idm(dbFiles);
+    }
+
     public DBHandler(ArrayList<File> dbFiles) 
     {
         this.dbFiles = dbFiles;
