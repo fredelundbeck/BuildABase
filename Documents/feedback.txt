@@ -1,0 +1,18 @@
+Forside med gruppenavne, lærernavne, klassenavn
+Indholdsfortegnelse
+Sidenumre og antal sider i alt!
+Vi mangler FURBS: Skriv hvordan vi kan bruge programmet osv., og hvad / **hvordan** vi gør for at gøre programmet funktionelt
+husk streger mellem alle klasserne
+ikke lang nok fully dressed usecase. how do we error handle. it can be several pages
+use case numbers in use case diagram
+extend skulle være include, og de includes skulle ikke være use cases (ovaler)
+
+domain model contains `nouns` from the usecases
+ssd: name the actor! also use a case with some content to it!
+ssd actors are "interessenter" in interessent-analyse
+
+sd:
+i vores sd er menu-loopet en "operational contract"!
+write type of Menu, at least the : to indicate a class.
+we forgot the return arrow/dot on the bottom left
+int shoud be lowercase!
